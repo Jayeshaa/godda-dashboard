@@ -1,151 +1,173 @@
 import streamlit as st
 import pandas as pd
-import math
-from pathlib import Path
+import plotly.express as px
 
-# Set the title and favicon that appear in the Browser's tab bar.
-st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
+st.set_page_config(layout="wide")
+
+# -------------------------
+# Load Data
+# -------------------------
+df1 = pd.read_csv("godda1.csv")   # Employment
+df2 = pd.read_csv("godda7.csv")   # Work & governance
+
+# Clean column names
+df1.columns = df1.columns.str.strip()
+df2.columns = df2.columns.str.strip()
+
+# -------------------------
+# Detect Block Columns
+# -------------------------
+block_col1 = [c for c in df1.columns if "block" in c.lower()][0]
+block_col2 = [c for c in df2.columns if "block" in c.lower()][0]
+
+# Convert to string (FIX for TypeError)
+df1[block_col1] = df1[block_col1].astype(str)
+df2[block_col2] = df2[block_col2].astype(str)
+
+# -------------------------
+# Create Unified Block List (SAFE)
+# -------------------------
+all_blocks = sorted(
+    set(df1[block_col1].dropna())
+    .union(set(df2[block_col2].dropna()))
 )
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
-
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
-
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
-
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
-
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
-
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
-
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
-
-    return gdp_df
-
-gdp_df = get_gdp_data()
-
-# -----------------------------------------------------------------------------
-# Draw the actual page
-
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
+# -------------------------
+# Sidebar Filter
+# -------------------------
+selected_blocks = st.sidebar.multiselect(
+    "Select Blocks",
+    all_blocks,
+    default=all_blocks
 )
 
-''
-''
+df1_f = df1[df1[block_col1].isin(selected_blocks)]
+df2_f = df2[df2[block_col2].isin(selected_blocks)]
 
+# -------------------------
+# Title
+# -------------------------
+st.title("📊 MGNREGA Smart Dashboard — Godda")
 
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
+# =========================================================
+# 🔹 EMPLOYMENT SECTION
+# =========================================================
+st.markdown("## 👥 Employment Analysis")
 
-st.header(f'GDP in {to_year}', divider='gray')
+reg_col = [c for c in df1.columns if "registered workers total" in c.lower()][0]
+active_col = [c for c in df1.columns if "active workers" in c.lower()][0]
+job_applied_col = [c for c in df1.columns if "jobcards applied" in c.lower()][0]
+job_issued_col = [c for c in df1.columns if "jobcards issued" in c.lower()][0]
+payment_col = [c for c in df1.columns if "amount involved" in c.lower()][0]
+fto_col = [c for c in df1.columns if "timely fto" in c.lower()][0]
+transaction_col = [c for c in df1.columns if "transaction" in c.lower()][0]
 
-''
+sc_col = [c for c in df1.columns if "sc" in c.lower()][0]
+st_col = [c for c in df1.columns if "st" in c.lower()][0]
+other_col = [c for c in df1.columns if "others" in c.lower()][0]
+women_col = [c for c in df1.columns if "women" in c.lower()][0]
 
-cols = st.columns(4)
+# KPIs
+c1, c2, c3, c4 = st.columns(4)
 
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
+total_reg = df1_f[reg_col].sum()
+total_act = df1_f[active_col].sum()
+emp_ratio = (total_act / total_reg * 100) if total_reg else 0
 
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
+total_app = df1_f[job_applied_col].sum()
+total_iss = df1_f[job_issued_col].sum()
+card_eff = (total_iss / total_app * 100) if total_app else 0
 
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
+c1.metric("👥 Registered", f"{total_reg:,.0f}")
+c2.metric("⚙️ Active", f"{total_act:,.0f}", f"{emp_ratio:.1f}%")
+c3.metric("🪪 Job Cards", f"{card_eff:.1f}%")
+c4.metric("💰 Payments", f"{df1_f[payment_col].sum():,.0f}", f"FTO {df1_f[fto_col].mean():.1f}%")
 
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+# Charts
+st.subheader("📌 Job Cards")
+st.plotly_chart(px.bar(df1_f, x=block_col1, y=[job_applied_col, job_issued_col], barmode="group"),
+                use_container_width=True)
+
+st.subheader("👥 Worker Composition")
+st.plotly_chart(px.bar(df1_f, x=block_col1, y=[sc_col, st_col, other_col]),
+                use_container_width=True)
+
+st.subheader("👩 Women Participation")
+st.plotly_chart(px.bar(df1_f, x=block_col1, y=[women_col, reg_col], barmode="group"),
+                use_container_width=True)
+
+st.subheader("💰 Payments vs Workers")
+st.plotly_chart(px.scatter(df1_f, x=reg_col, y=payment_col,
+                           size=transaction_col, hover_name=block_col1),
+                use_container_width=True)
+
+# =========================================================
+# 🔹 RANKING
+# =========================================================
+st.markdown("## 🏆 Block Ranking")
+
+rank_df = df1_f.copy()
+
+rank_df["Score"] = (
+    0.35 * (rank_df[active_col] / rank_df[reg_col]) +
+    0.25 * (rank_df[job_issued_col] / rank_df[job_applied_col]) +
+    0.20 * (rank_df[fto_col] / 100) +
+    0.20 * (rank_df[payment_col] / rank_df[payment_col].max())
+)
+
+rank_df = rank_df.sort_values("Score")
+rank_df["Rank"] = range(1, len(rank_df)+1)
+
+st.dataframe(rank_df[[block_col1, "Score", "Rank"]])
+
+st.success(f"🏆 Best Block: {rank_df.iloc[-1][block_col1]}")
+st.error(f"⚠️ Worst Block: {rank_df.iloc[0][block_col1]}")
+
+# =========================================================
+# 🔹 WORK & GOVERNANCE
+# =========================================================
+st.markdown("## 🏗️ Work & Governance")
+
+issues_col = [c for c in df2.columns if "issues" in c.lower()][0]
+amount_col = [c for c in df2.columns if "amount" in c.lower()][0]
+plant_completed = [c for c in df2.columns if "completed" in c.lower() and "plantation" in c.lower()][0]
+plant_ongoing = [c for c in df2.columns if "ongoing" in c.lower()][0]
+as_identified = [c for c in df2.columns if "identified" in c.lower()][0]
+as_completed = [c for c in df2.columns if "sarovar" in c.lower() and "completed" in c.lower()][0]
+
+# KPIs
+k1, k2, k3, k4 = st.columns(4)
+k1.metric("⚠️ Issues", f"{df2_f[issues_col].sum():,.0f}")
+k2.metric("💰 Amount", f"₹{df2_f[amount_col].sum():,.0f}")
+k3.metric("🌱 Completed", f"{df2_f[plant_completed].sum():,.0f}")
+k4.metric("🔄 Ongoing", f"{df2_f[plant_ongoing].sum():,.0f}")
+
+# Charts
+st.subheader("🌱 Plantation")
+st.plotly_chart(px.bar(df2_f, x=block_col2, y=[plant_completed, plant_ongoing], barmode="group"),
+                use_container_width=True)
+
+st.subheader("🌊 Amrit Sarovar")
+st.plotly_chart(px.bar(df2_f, x=block_col2, y=[as_identified, as_completed], barmode="group"),
+                use_container_width=True)
+
+st.subheader("⚠️ Issues")
+st.plotly_chart(px.bar(df2_f, x=block_col2, y=issues_col, color=issues_col),
+                use_container_width=True)
+
+# Risk Score
+st.subheader("🔥 Risk Score")
+
+df2_f = df2_f.copy()
+df2_f["Risk"] = df2_f[issues_col] + (df2_f[amount_col] / 100000)
+
+st.plotly_chart(px.bar(df2_f, x=block_col2, y="Risk", color="Risk"),
+                use_container_width=True)
+
+st.error(f"🚨 High Risk: {df2_f.sort_values('Risk', ascending=False).iloc[0][block_col2]}")
+st.success(f"✅ Low Risk: {df2_f.sort_values('Risk').iloc[0][block_col2]}")
+
+# -------------------------
+# Footer
+# -------------------------
+#st.success("🚀 Dashboard: Employment + Performance + Work + Governance Risk")
