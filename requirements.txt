@@ -1,2 +1,12 @@
-streamlit
 pandas
+requests
+streamlit
+numpy
+matplotlib
+seaborn
+plotly
+beautifulsoup4
+selenium
+html5lib
+lxml
+
