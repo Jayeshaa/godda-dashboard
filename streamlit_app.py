@@ -380,8 +380,8 @@ df_st["Registered_ST_%"] = (
     df_st["Registered_ST"] / st_population * 100
 ).round(2)
 
-df_st["Active_SC_%"] = (
-    df_st["Active_SC"] / st_population * 100
+df_st["Active_ST_%"] = (
+    df_st["Active_ST"] / st_population * 100
 ).round(2)
 
 # Convert to long format
@@ -400,7 +400,7 @@ fig = px.bar(
     color="Category",
     barmode="group",
     text="Percentage",
-    title="SC Worker Participation by Block (%)"
+    title="ST Worker Participation by Block (%)"
 )
 
 fig.update_traces(texttemplate='%{text:.2f}%', textposition='outside')
@@ -471,7 +471,7 @@ fig = px.bar(
     color="Category",
     barmode="group",
     text="Percentage",
-    title="SC Worker Participation by Block (%)"
+    title="Women Worker Participation by Block (%)"
 )
 
 fig.update_traces(texttemplate='%{text:.2f}%', textposition='outside')
