@@ -987,7 +987,7 @@ fig.update_layout(
     yaxis_title="Percentage (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True, key="bank_account_chart)
+st.plotly_chart(fig, use_container_width=True, key="bank_account_chart")
 
 st.subheader("Methodology")
 
