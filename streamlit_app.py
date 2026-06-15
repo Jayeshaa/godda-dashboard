@@ -452,7 +452,7 @@ df_women["Registered_Women_%"] = (
 ).round(2)
 
 df_women["Active_Women_%"] = (
-    df_st["Active_Women"] / women_population * 100
+    df_women["Active_Women"] / women_population * 100
 ).round(2)
 
 # Convert to long format
