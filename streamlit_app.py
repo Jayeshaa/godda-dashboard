@@ -1117,7 +1117,7 @@ fig.update_layout(
     yaxis_title="Percentage Share (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True,, key="acc_validation_chart")
+st.plotly_chart(fig, use_container_width=True, key="acc_validation_chart")
 
 st.subheader("Methodology")
 
