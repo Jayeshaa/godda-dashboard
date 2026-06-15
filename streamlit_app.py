@@ -1407,7 +1407,7 @@ blocks = [
 df = pd.DataFrame({
     "Blocks": blocks,
 
-    "Identified": [14,3,13,0,0,7,0,0,2],
+    "Amrit_Sarovar": [14,3,13,0,0,7,0,0,2],
     "Approved_Not_Started": [0,0,0,0,0,0,0,0,0],
     "Ongoing": [1,1,3,0,0,2,0,0,0],
     "Completed": [2,0,7,0,0,5,0,0,0],
@@ -1423,7 +1423,7 @@ plot_df = pd.melt(
     df,
     id_vars="Blocks",
     value_vars=[
-        "Identified",
+        "Amrit_Sarovar",
         "Approved_Not_Started",
         "Ongoing",
         "Completed",
