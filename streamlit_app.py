@@ -577,9 +577,7 @@ st.latex(r'''
 {\max(\text{Active Workers e-Shram})}
 \times100
 ''')
-import pandas as pd
-import plotly.express as px
-import streamlit as st
+
 
 blocks = [
     "BASANTRAY","BOARIJORE","GODDA",
@@ -655,9 +653,7 @@ st.latex(r'''
 {\text{Registered Persons}}
 \times100
 ''')
-import pandas as pd
-import plotly.express as px
-import streamlit as st
+
 
 blocks = [
     "BASANTRAY","BOARIJORE","GODDA",
@@ -767,14 +763,14 @@ data = {
     "Women": [77896,380895,142814,138406,211253,113261,321081,143780,447698]
 }
 
-df_persondays = pd.DataFrame(data)
+df = pd.DataFrame(data)
 
 # Total persondays per block
-df_persondays["Total"] = df_persondays[["SCs","STs","Others","Women"]].sum(axis=1)
+df["Total"] = df[["SCs","STs","Others","Women"]].sum(axis=1)
 
 # Convert to percentage
 for col in ["SCs","STs","Others","Women"]:
-    df_persondays[col + "_%"] = (df_persondays[col] / df_persondays["Total"]) * 100
+    df[col + "_%"] = (df[col] / df["Total"]) * 100
 
 # Melt for Plotly
 df_melt = df.melt(
@@ -827,7 +823,7 @@ data = {
     "Households": [0, 24, 2, 9, 0, 0, 18, 0, 1]
 }
 
-df_vulnerable = pd.DataFrame(data)
+df = pd.DataFrame(data)
 
 # Plot
 fig = px.bar(
@@ -864,7 +860,7 @@ trans_registered = [4,5,2,2,2,0,5,1,1]
 trans_employed   = [0,0,1,0,0,0,0,0,0]
 trans_persondays = [0,0,18,0,0,0,0,0,0]
 
-df_dt = pd.DataFrame({
+df = pd.DataFrame({
     "Blocks": blocks,
 
     "Disabled Registered": disabled_registered,
