@@ -77,7 +77,7 @@ fig.update_layout(
     yaxis_title="Population"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="social_category_chart")
 
 # ---------------------------------
 # Methodology Section
@@ -160,7 +160,7 @@ fig.update_layout(
     legend_title="Metrics"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="jobcard_chart")
 
 # Summary Metrics
 col1, col2, col3 = st.columns(3)
@@ -244,7 +244,7 @@ fig1.update_layout(
     height=500
 )
 
-st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig1, use_container_width=True, key="emp_work_demand_chart")
 
 st.latex(
     r"\text{Monthly Household Demand \%}=\frac{\text{Households in Month}}{\text{Maximum Monthly Households}}\times100"
@@ -279,7 +279,7 @@ fig2.update_layout(
     height=600
 )
 
-st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True, key="HH_vs_Persondays_chart")
 
 st.latex(
     r"\text{Household Share \%}=\frac{\text{Monthly Households}}{\text{Total Annual Households}}\times100"
@@ -341,7 +341,7 @@ fig.update_layout(
     height=600
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="sc_category_chart")
 
 st.subheader("Methodology")
 
@@ -412,7 +412,7 @@ fig.update_layout(
     height=600
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="st_category_chart")
 
 st.subheader("Methodology")
 
@@ -483,7 +483,7 @@ fig.update_layout(
     height=600
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="women_category_chart")
 
 st.subheader("Methodology")
 
@@ -558,7 +558,7 @@ fig.update_layout(
     yaxis_title="Percentage (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="e-shram_chart")
 
 st.subheader("Methodology")
 
@@ -642,7 +642,7 @@ fig.update_layout(
     legend_title="Age Group"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="agewise_emp_chart")
 
 st.subheader("Methodology")
 
@@ -717,7 +717,7 @@ fig.update_layout(
     legend_title="Worker Category"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="workforce_chart")
 
 st.subheader("Methodology")
 
@@ -799,7 +799,7 @@ fig.update_layout(
     xaxis_title="Blocks"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="persondays_generated_chart")
 
 st.subheader("Methodology")
 
@@ -840,7 +840,7 @@ fig.update_layout(
     yaxis_title="Number of Households"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="vulnerable_category_chart")
 
 st.title("Disabled and Transgender Inclusion")
 
@@ -914,7 +914,7 @@ fig.update_layout(
     yaxis_title="Percentage (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="disabled_vs_transgender_chart")
 
 st.subheader("Methodology")
 
@@ -987,7 +987,7 @@ fig.update_layout(
     yaxis_title="Percentage (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="bank_account_chart)
 
 st.subheader("Methodology")
 
@@ -1063,7 +1063,7 @@ fig.update_layout(
     yaxis_title="Percentage (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="bank_chart")
 
 st.subheader("Methodology")
 
@@ -1117,7 +1117,7 @@ fig.update_layout(
     yaxis_title="Percentage Share (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True,, key="acc_validation_chart")
 
 st.subheader("Methodology")
 
@@ -1181,7 +1181,7 @@ fig.update_layout(
     yaxis_title="Percentage (%)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="expenditure_chart")
 
 st.latex(r'''
 \%W_i = \frac{W_i}{T_i} \times 100
@@ -1241,7 +1241,7 @@ fig.update_layout(
     xaxis_title="Blocks",
     yaxis_title="Value (Rs.)"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="cost_analysis_chart")
 
 st.subheader("Methodology")
 
@@ -1301,7 +1301,7 @@ fig.update_layout(
     xaxis_title="Blocks",
     yaxis_title="Value"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="PFMS_chart")
 
 st.subheader("Methodology")
 
@@ -1316,50 +1316,6 @@ A_i = \text{Amount Involved}_i
 st.latex(r'''
 \text{Efficiency Ratio}_i = \frac{A_i}{T_i}
 ''')
-
-
-# Blocks
-blocks = [
-    "BASANTRAY","BOARIJORE","GODDA","MAHAGAMA","MEHARMA",
-    "PATHERGAMA","PORAIYAHAT","SUNDERPAHARI","THAKURGANGTI"
-]
-
-# Data
-transactions = [32192,126737,64966,52457,78111,44449,71427,147008,56399]
-amount = [460.84,2128.59,843.86,695.58,1151.69,640.33,1965.47,2218.04,846.97]
-
-df = pd.DataFrame({
-    "Blocks": blocks,
-    "Total_Transactions": transactions,
-    "Amount_Involved": amount
-})
-
-# Melt for grouped visualization
-plot_df = pd.melt(
-    df,
-    id_vars="Blocks",
-    value_vars=["Total_Transactions", "Amount_Involved"],
-    var_name="Metric",
-    value_name="Value"
-)
-
-# Plot
-fig = px.bar(
-    plot_df,
-    x="Blocks",
-    y="Value",
-    color="Metric",
-    barmode="group",
-    text_auto=".1f",
-    title="PFMS Payment Analysis: Transactions vs Amount Involved"
-)
-
-fig.update_layout(
-    xaxis_title="Blocks",
-    yaxis_title="Value"
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 
 # Categories
@@ -1420,7 +1376,7 @@ fig.update_layout(
     xaxis_tickangle=-45
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="work_category_chart")
 
 st.subheader("Methodology")
 
@@ -1497,7 +1453,7 @@ fig.update_layout(
     xaxis_tickangle=-45
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="water_work_category_chart")
 
 st.subheader("Methodology")
 
@@ -1602,7 +1558,7 @@ fig1 = px.bar(
 fig1.update_layout(xaxis_tickangle=-45)
 
 st.title("MGNREGA Issue & Financial Misconduct Dashboard")
-st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig1, use_container_width=True, key="issues_category_chart")
 
 # Melt amount
 amt_df = pd.melt(
@@ -1631,7 +1587,7 @@ fig2 = px.bar(
 
 fig2.update_layout(xaxis_tickangle=-45)
 
-st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True, key="financial_impact_chart")
 
 st.subheader("Methodology")
 
